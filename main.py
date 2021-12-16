@@ -6,26 +6,30 @@ camera_window_width = 480
 video_cam_device = 0
 key_text_thickness = 3
 key_text_scale = 3
+buttonList = []
+keys = [["Q","W","E","R","T","Y","U","I","O","P"],
+        ["A","S","D","F","G","H","J","K","L"],
+        ["Z","X","C","V","B","N","M"]]
 
 cap = cv2.VideoCapture(video_cam_device)
 cap.set(3, camera_window_length)    # 3 -> For Length
 cap.set(4, camera_window_width)     # 4 -> For Width
 detector = HandDetector(detectionCon=0.8)   # set detector for the hand
 
+
 # class to handle buttons
 class Button():
-    def __init__(self, pos, text, size=[100, 100]):
+    def __init__(self, pos, text, size=[50, 50]):
         self.pos = pos
         self.text = text
         self.size = size
     
-    def draw(self, img):
-        cv2.rectangle(img, self.pos, self.size, (255, 0, 255), cv2.FILLED)
-        cv2.putText(img, self.text, (self.pos[0]+25, self.pos[1]+25), cv2.FONT_HERSHEY_PLAIN, key_text_scale, (255, 255, 255), key_text_thickness)
-        return img
+        x,y = self.pos
+        w,h = self.size
+        cv2.rectangle(img, self.pos, (x+w, y+h), (255, 0, 255), cv2.FILLED)
+        cv2.putText(img, self.text, (self.pos[0]+5, self.pos[1]+40), cv2.FONT_HERSHEY_PLAIN, key_text_scale, (255, 255, 255), key_text_thickness)
+        # return img
 
-# The Buttons create once
-myButton = Button([100, 100], "Q")
 
 # main function
 while True:
@@ -35,8 +39,10 @@ while True:
 
     hands, img = detector.findHands(img)   # find the hand in the supplied img=image(Vedio by cv2)
 
-    # Draw Buttons on screen
-    img = myButton.draw(img)
+    # The Buttons create once :: Now Every time (Not recomended : Testing only)
+    for i in range(len(keys)):
+        for x, key in enumerate(keys[i]):
+            buttonList.append(Button([40+(x*60), 40+(i*60)], key))
 
     # hands are detected
     if hands:
