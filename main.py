@@ -1,5 +1,8 @@
 import cv2
 from cvzone.HandTrackingModule import HandDetector
+from time import sleep
+from pynput import keyboard
+from pynput.keyboard import Controller
 
 # constant values
 camera_window_length = 640  
@@ -10,6 +13,9 @@ key_text_scale = 3
 index_finger = 8
 middle_finger = 12
 thumb = 4
+keyboard_click_delay = 0.2
+final_text = ""
+keyboard = Controller()
 buttonList = []
 keys = [["Q","W","E","R","T","Y","U","I","O","P"],
         ["A","S","D","F","G","H","J","K","L"],
@@ -75,6 +81,12 @@ while True:
                 if l<30:
                     cv2.rectangle(img, button.pos, (x+w, y+h), (0, 255, 0), cv2.FILLED)
                     cv2.putText(img, button.text, (x+5, y+40), cv2.FONT_HERSHEY_PLAIN, key_text_scale, (255, 255, 255), key_text_thickness)
+                    keyboard.press(button.text)
+                    final_text+=button.text
+                    sleep(keyboard_click_delay)
+
+    cv2.rectangle(img, (50, 260), (400, 300), (255, 0, 255), cv2.FILLED)
+    cv2.putText(img, final_text, (60, 300), cv2.FONT_HERSHEY_PLAIN, key_text_scale, (255, 255, 255), key_text_thickness)
 
     # show the vedio capture on screen
     cv2.imshow("Image", img)
