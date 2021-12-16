@@ -8,6 +8,7 @@ video_cam_device = 0
 key_text_thickness = 3
 key_text_scale = 3
 index_finger = 8
+middle_finger = 12
 thumb = 4
 buttonList = []
 keys = [["Q","W","E","R","T","Y","U","I","O","P"],
@@ -68,8 +69,12 @@ while True:
             w, h = button.size
 
             if x < hand1lmList[index_finger][0] < x+w and y < hand1lmList[index_finger][1] < y+h:
-                cv2.rectangle(img, button.pos, (x+w, y+h), (0, 255, 0), cv2.FILLED)
+                cv2.rectangle(img, button.pos, (x+w, y+h), (175, 0, 175), cv2.FILLED)
                 cv2.putText(img, button.text, (x+5, y+40), cv2.FONT_HERSHEY_PLAIN, key_text_scale, (255, 255, 255), key_text_thickness)
+                l, _  = detector.findDistance(hand1lmList[index_finger], hand1lmList[middle_finger])
+                if l<30:
+                    cv2.rectangle(img, button.pos, (x+w, y+h), (0, 255, 0), cv2.FILLED)
+                    cv2.putText(img, button.text, (x+5, y+40), cv2.FONT_HERSHEY_PLAIN, key_text_scale, (255, 255, 255), key_text_thickness)
 
     # show the vedio capture on screen
     cv2.imshow("Image", img)
